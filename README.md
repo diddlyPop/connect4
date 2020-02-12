@@ -10,6 +10,6 @@ Project goals:
   - Train and apply agent to console style game
  - Deploy api for interfacing with our trained Connect4 agent
  - Deploy GUI version of game
-  - Pygame or web app
+   - Pygame or web app
 
 <hr>
