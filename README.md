@@ -8,8 +8,8 @@ Project goals:
 - Build AlphaZero-style agent for connect4
   - Neural network / Monte carlo search tree
   - Train and apply agent to console style game
- - Deploy api for interfacing with our trained Connect4 agent
- - Deploy GUI version of game
-   - Pygame or web app
+- Deploy api for interfacing with our trained Connect4 agent
+- Deploy GUI version of game
+  - Pygame or web app
 
 <hr>
