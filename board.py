@@ -18,7 +18,7 @@ class Board:
         if [2, 2, 2, 2] is found then player 2 wins
         :return: bool if game has been won
         """
-        # TODO: add check win
+        # TODO: add check win for game board
         pass
 
     def place(self, column, player):
