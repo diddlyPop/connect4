@@ -13,3 +13,10 @@ Project goals:
   - Pygame or web app
 
 <hr>
+
+AlphaZero
+============
+The AlphaZero algorithm runs three processes in parallel:
+- Monte-Carlo search tree self-play, guided by the policy and value given by the neural network for each move
+- Constant training on the turns from the Monte-Carlo search tree self-play
+- Evaluation of the neural networks performance at pre-defined checkpoints, uses best model
