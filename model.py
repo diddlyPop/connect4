@@ -1,3 +1,21 @@
+#################################################################################
+#
+# model.py
+#
+# NNet class will contain all keras functionality
+#
+# Network has input layer that reads in the boards 6x7 matrix
+#
+# The output layer has two heads:
+#   Policy head for individual column probabilities
+#   Value head for indicating when a loss or win is expected
+#
+# Trains on batches of data from self-play:
+#   Batch consists of each turn's 'encoded state block',
+#   probabilities from the policy head, and bool for if that player won the game
+#
+#################################################################################
+
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense

@@ -1,3 +1,14 @@
+#################################################################################
+#
+# board.py
+#
+# Board class holds board rules, board data
+#
+# Methods available for placing pieces and checking if the game has been won
+#
+# All game handling is handled in game.py
+#
+#################################################################################
 import numpy as np
 
 
@@ -12,6 +23,9 @@ class Board:
         # a dictionary storing column numbers with the amount of pieces in that column
         self.cols = {0: 5, 1: 5, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5}
         self.cache = []
+        self.last_to_move = None
+        self.NUM_COLS = 7
+        self.NUM_ROWS = 6
 
     def get_board_state(self):
         """"
@@ -38,7 +52,7 @@ class Board:
                 available.append(key+1)
         return available
 
-    def check_win(self):
+    def check_win(self, player):
         """
         checks for win in all directions (diags, horiz, vert)
         check if array exists within a matrix
@@ -47,11 +61,40 @@ class Board:
         if [2, 2, 2, 2] is found then player 2 wins
         :return: bool if game has been won
         """
-        # TODO: add check win for game board
-        if len(self.get_available_moves()) == 0:
-            return True
-        else:
-            return False
+        # diag
+        for col in range(self.NUM_COLS - 3):
+            for row in range(self.NUM_ROWS - 3):
+                if self.matrix[row][col] == player \
+                        and self.matrix[row + 1][col + 1] == player \
+                        and self.matrix[row + 2][col + 2] == player \
+                        and self.matrix[row + 3][col + 3] == player:
+                    return True
+
+        # diag
+        for col in range(self.NUM_COLS - 3):
+            for row in range(3, self.NUM_ROWS):
+                if self.matrix[row][col] == player \
+                        and self.matrix[row - 1][col + 1] == player \
+                        and self.matrix[row - 2][col + 2] == player \
+                        and self.matrix[row - 3][col + 3] == player:
+                    return True
+        # vertical
+        for col in range(self.NUM_COLS - 3):
+            for row in range(self.NUM_ROWS):
+                if self.matrix[row][col] == player \
+                        and self.matrix[row][col + 1] == player \
+                        and self.matrix[row][col + 2] == player \
+                        and self.matrix[row][col + 3] == player:
+                    return True
+
+        # horizontal
+        for col in range(self.NUM_COLS):
+            for row in range(self.NUM_ROWS - 3):
+                if self.matrix[row][col] == player \
+                        and self.matrix[row + 1][col] == player \
+                        and self.matrix[row + 2][col] == player \
+                        and self.matrix[row + 3][col] == player:
+                    return True
 
     def place(self, column, player):
         """
@@ -64,6 +107,7 @@ class Board:
             row = self.cols.get(column)
             self.cols[column] -= 1
             self.matrix[row][column] = player
+            self.last_to_move = player
 
     def reset_board(self):
         """

@@ -1,3 +1,16 @@
+#################################################################################
+#
+# agents.py
+#
+# Player class is inherited by game players
+#
+# Human's choose their moves via the command line
+#
+# RandomAgent's choose their moves at random from the available moves
+#
+# IntelligentAgent's will use a neural network to predict the best next move
+#
+#################################################################################
 import random
 
 

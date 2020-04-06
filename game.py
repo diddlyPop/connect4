@@ -1,3 +1,14 @@
+#################################################################################
+#
+# game.py
+#
+# Connect4 class runs the game and stores game-related information
+#
+# Human's choose their moves via the command line
+#
+# Mostly to abstract game loop out of Board class, but they could be combined
+#
+#################################################################################
 from board import Board
 
 
@@ -28,9 +39,15 @@ class Connect4:
                 # place piece into board at this column
                 self.board.place(choice, player.number)
                 # check if win conditions have been met
-                if self.board.check_win():
+                if self.board.check_win(player.number):
                     # if a winner is found set this variable to contain the winners player number
                     self.game_running = False
                     self.winner = player.number
+                    self.board.print_board()
+                    break
+                elif self.board.get_available_moves() == 0:
+                    self.game_running = False
+                    self.winner = "DRAW"
+                    self.board.print_board()
                     break
         return self.winner, data
