@@ -48,7 +48,10 @@ class Board:
         :return: bool if game has been won
         """
         # TODO: add check win for game board
-        pass
+        if len(self.get_available_moves()) == 0:
+            return True
+        else:
+            return False
 
     def place(self, column, player):
         """

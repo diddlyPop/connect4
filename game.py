@@ -2,7 +2,7 @@ from board import Board
 
 
 class Connect4:
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, collection=False):
         """
         sets up player list, initializes game data, creates new board, and starts game
         """
@@ -10,12 +10,15 @@ class Connect4:
         self.players = [player1, player2]
         self.winner = None
         self.board = Board()
+        self.collection = collection
 
     def start(self):
         """
         main game loop
+        TODO: log state data
         :return: none, but displays winner at end of game
         """
+        data = ""
         while self.game_running:
             for player in self.players:
                 # display board
@@ -30,7 +33,4 @@ class Connect4:
                     self.game_running = False
                     self.winner = player.number
                     break
-        self.end()
-
-    def end(self):
-        print(f"Winner: {self.winner}")
+        return self.winner, data
