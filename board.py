@@ -1,44 +1,31 @@
 import numpy as np
 
 
-class Player:
-    def __init__(self, number):
-        self.number = number
-
-    def choose_move(self, available):
-        pass
-
-
-class Human(Player):
-    def choose_move(self, available):
-        """
-        Retrieves user input, verifies column number has an available space, and places that piece
-        :param available:
-        :return: none, but place pieces in board
-        """
-
-        print(f"Can place a piece at: {available}")
-        choice = int(input("Column: "))
-        while choice not in available:
-            print("That column is full")
-            choice = int(input("Column: "))
-        return choice - 1
-
-
-class Computer(Player):
-    def choose_move(self, available):
-        pass
-
-
 class Board:
     def __init__(self):
         """
         initializes board to a zero'd out 6x7 matrix
+        'cache' holds the last four previous turns
         """
         # a 6x7 2d matrix
         self.matrix = np.zeros((6, 7), dtype=int)
         # a dictionary storing column numbers with the amount of pieces in that column
         self.cols = {0: 5, 1: 5, 2: 5, 3: 5, 4: 5, 5: 5, 6: 5}
+        self.cache = []
+
+    def get_board_state(self):
+        """"
+        TODO: will encode board state to a format readable by our neural network
+        TODO: will append the board states to the board cache
+        """
+        current_state = self.matrix
+        if len(self.cache) > 3:
+            self.cache.pop(0)
+        self.cache.append(current_state)
+        encoded_state_block = self.cache
+        # TODO: add logic here for creating the current encoded state block
+        # encoded_state_block is 6x7x8 (6x7 for board size, 2 layers for each turn, 4 turns total of history)
+        return encoded_state_block
 
     def get_available_moves(self):
         """
@@ -94,47 +81,3 @@ class Board:
         output = '\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.matrix])
         print(output)
         print("_________________________")
-
-
-class Game:
-
-    def __init__(self, player1, player2):
-        """
-        sets up player list, initializes game data, creates new board, and starts game
-        """
-        self.game_running = True
-        self.players = [player1, player2]
-        self.winner = None
-        self.board = Board()
-        self.start()
-
-    def start(self):
-        """
-        main game loop
-        :return: none, but displays winner at end of game
-        """
-        while self.game_running:
-            for player in self.players:
-                # display board
-                self.board.print_board()
-                # get column input from player
-                choice = player.choose_move(self.board.get_available_moves())
-                # place piece into board at this column
-                self.board.place(choice, player.number)
-                # check if win conditions have been met
-                if self.board.check_win():
-                    # if a winner is found set this variable to contain the winners player number
-                    self.game_running = False
-                    self.winner = player.number
-                    break
-        self.end()
-
-    def end(self):
-        print(f"Winner: {self.winner}")
-
-
-if __name__ == '__main__':
-    player1 = Human(1)
-    player2 = Human(2)
-    newGame = Game(player1, player2)
-
