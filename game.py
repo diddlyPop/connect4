@@ -45,7 +45,7 @@ class Connect4:
                     self.winner = player.number
                     self.board.print_board()
                     break
-                elif self.board.get_available_moves() == 0:
+                elif not self.board.get_available_moves():
                     self.game_running = False
                     self.winner = "DRAW"
                     self.board.print_board()

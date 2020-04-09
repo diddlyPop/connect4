@@ -16,7 +16,7 @@ from game import Connect4
 from collections import deque
 # from model import NNet
 import random
-
+import time
 
 class NetController:
     def __init__(self):
@@ -42,19 +42,23 @@ class NetController:
         print(f"The winner was Player {winner}!")
         print(f"Data collected during match: {data}")
 
-    def start_self_play(self, rounds=20):
-        self_play_winners = {1: 0, 2: 0}
-
+    def start_self_play(self, rounds=1000):
+        self_play_winners = {1: 0, 2: 0, "DRAW": 0}
+        now = time.time()
         for _ in range(rounds):
             player1 = RandomAgent(1)
             player2 = RandomAgent(2)
             game = Connect4(player1, player2, collection=True)
             winner, data = game.start()
-            self.buffer.extend(data)
+            # self.buffer.extend(data)
             self_play_winners[winner] += 1
+        later = time.time()
+        total = later - now
         print(f"Games won by Player 1: {self_play_winners[1]}!")
         print(f"Games won by Player 2: {self_play_winners[2]}!")
+        print(f"Draws: {self_play_winners['DRAW']}!")
         print(f"Data collected during match: {data}")
+        print(f"Time during {rounds} matches: {total:.2f}s")
 
     def train_from_data(self):
         batch = random.sample(self.buffer, self.buffer_size)
