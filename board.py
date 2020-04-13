@@ -33,13 +33,12 @@ class Board:
         TODO: will append the board states to the board cache
         """
         current_state = self.matrix
-        if len(self.cache) > 3:
-            self.cache.pop(0)
-        self.cache.append(current_state)
-        encoded_state_block = self.cache
+
+        # self.cache.append(current_state)
+        # encoded_state_block = self.cache
         # TODO: add logic here for creating the current encoded state block
         # encoded_state_block is 6x7x8 (6x7 for board size, 2 layers for each turn, 4 turns total of history)
-        return encoded_state_block
+        return current_state
 
     def get_available_moves(self):
         """

@@ -29,15 +29,18 @@ class Connect4:
         TODO: log state data
         :return: none, but displays winner at end of game
         """
-        data = ""
+        win_flag = 1
+        lose_flag = -1
         while self.game_running:
             for player in self.players:
                 # display board
                 self.board.print_board()
                 # get column input from player
-                choice = player.choose_move(self.board.get_available_moves(), self.board.get_board_state())
+                (choice, policy) = player.choose_move(self.board.get_available_moves(), self.board.get_board_state())
                 # place piece into board at this column
                 self.board.place(choice, player.number)
+                if self.collection:
+                    player.turns.append([self.board.get_board_state(), list([policy])])
                 # check if win conditions have been met
                 if self.board.check_win(player.number):
                     # if a winner is found set this variable to contain the winners player number
@@ -50,4 +53,18 @@ class Connect4:
                     self.winner = "DRAW"
                     self.board.print_board()
                     break
+        for player in self.players:
+            if self.winner == player.number:
+                player.add_winners(1)
+            elif self.winner == 2:
+                player.add_winners(-1)
+            else:
+                player.add_winners(0)
+
+        data = []
+        for i in range(len(self.players[0].turns)):
+            data.append(self.players[0].turns[i])
+            if i < len(self.players[1].turns):
+                data.append(self.players[1].turns[i])
+
         return self.winner, data

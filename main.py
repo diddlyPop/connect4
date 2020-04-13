@@ -14,11 +14,11 @@
 from agents import Human, RandomAgent, IntelligentAgent
 from game import Connect4
 from collections import deque
-# from model import NNet
 import random
 import time
 
-class NetController:
+
+class GameController:
     def __init__(self):
         self.buffer_size = 10000
         self.buffer = deque(maxlen=self.buffer_size)
@@ -44,14 +44,17 @@ class NetController:
 
     def start_self_play(self, rounds=1000):
         self_play_winners = {1: 0, 2: 0, "DRAW": 0}
+        player1 = RandomAgent(1)
+        player2 = IntelligentAgent(2)
         now = time.time()
-        for _ in range(rounds):
-            player1 = RandomAgent(1)
-            player2 = RandomAgent(2)
+        for i in range(rounds):
             game = Connect4(player1, player2, collection=True)
             winner, data = game.start()
-            # self.buffer.extend(data)
+            self.buffer.extend(data)
             self_play_winners[winner] += 1
+            if i % 100 == 0:
+                self.train_from_data(player2)
+
         later = time.time()
         total = later - now
         print(f"Games won by Player 1: {self_play_winners[1]}!")
@@ -60,17 +63,16 @@ class NetController:
         print(f"Data collected during match: {data}")
         print(f"Time during {rounds} matches: {total:.2f}s")
 
-    def train_from_data(self):
-        batch = random.sample(self.buffer, self.buffer_size)
+    def train_from_data(self, player):
+        batch = random.sample(self.buffer, self.batch_size)
         states_batch = [data[0] for data in batch]
         policies_batch = [data[1] for data in batch]
         winners_batch = [data[2] for data in batch]
         for _ in range(self.epochs):
-            pass
-            # self.network.train_on_batch(states_batch, policies_batch, winners_batch)
+            player.learn(states_batch, policies_batch, winners_batch)
 
 
 if __name__ == '__main__':
-    net = NetController()
-    net.start_self_play()
+    coach = GameController()
+    coach.start_self_play()
 
