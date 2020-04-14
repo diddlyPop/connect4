@@ -26,7 +26,7 @@ class GameController:
         self.epochs = 5
         # self.network = NNet()
 
-    def start_pvp_game(self):
+    def start_pvp_game(self, player1, player2):
         player1 = Human(1)
         player2 = Human(2)
         game = Connect4(player1, player2, collection=False)
@@ -34,7 +34,7 @@ class GameController:
         print(f"The winner was Player {winner}!")
         print(f"Data collected during match: {data}")
 
-    def start_pve_game(self):
+    def start_pve_game(self, player1, player2):
         player1 = Human(1)
         player2 = RandomAgent(2)
         game = Connect4(player1, player2, collection=False)
@@ -42,21 +42,23 @@ class GameController:
         print(f"The winner was Player {winner}!")
         print(f"Data collected during match: {data}")
 
-    def start_self_play(self, rounds=1000):
+    def start_self_play(self, player1, player2, rounds=1000):
         self_play_winners = {1: 0, 2: 0, "DRAW": 0}
-        player1 = RandomAgent(1)
-        player2 = IntelligentAgent(2)
+
         now = time.time()
         for i in range(rounds):
             game = Connect4(player1, player2, collection=True)
             winner, data = game.start()
             self.buffer.extend(data)
             self_play_winners[winner] += 1
-            if i % 100 == 0:
+            if i + 1 % 20 == 0:
                 self.train_from_data(player2)
+                print("buffer:")
+                print(len(self.buffer))
 
         later = time.time()
         total = later - now
+        print(f"Training triggered: {player2.trained}")
         print(f"Games won by Player 1: {self_play_winners[1]}!")
         print(f"Games won by Player 2: {self_play_winners[2]}!")
         print(f"Draws: {self_play_winners['DRAW']}!")
@@ -64,15 +66,18 @@ class GameController:
         print(f"Time during {rounds} matches: {total:.2f}s")
 
     def train_from_data(self, player):
-        batch = random.sample(self.buffer, self.batch_size)
+        batch = random.sample([self.buffer], self.batch_size)
         states_batch = [data[0] for data in batch]
         policies_batch = [data[1] for data in batch]
         winners_batch = [data[2] for data in batch]
         for _ in range(self.epochs):
+            print("ATTEMPTS TO LEARN")
             player.learn(states_batch, policies_batch, winners_batch)
 
 
 if __name__ == '__main__':
     coach = GameController()
-    coach.start_self_play()
+    player1 = RandomAgent(1)
+    player2 = IntelligentAgent(2)
+    coach.start_self_play(player1, player2)
 

@@ -13,6 +13,7 @@
 #################################################################################
 import random
 from model import NNet
+import numpy as np
 
 
 class Player:
@@ -49,12 +50,12 @@ class Human(Player):
         while choice not in available:
             print("That column is full")
             choice = int(input("Column: "))
-        return (choice - 1, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7])
+        return choice - 1, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7]
 
 
 class RandomAgent(Player):
     def choose_move(self, available, board_state):
-        return (int(random.choice(available))-1, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7])
+        return int(random.choice(available))-1, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7]
 
 
 class IntelligentAgent(Player):
@@ -65,20 +66,27 @@ class IntelligentAgent(Player):
 
     def choose_move(self, available, board_state):
         if self.trained:
-            policy, value = self.network.model.predict(board_state)
-            print(f"Policy: {policy}")
-            print(f"Value: {value}")
-            choice = policy[0]
-            if choice in available:
-                return choice, policy
-            else:
-                return NotImplementedError
+            results = self.network.model.predict([(np.asarray(board_state)).reshape((1, 7, 6))])
+            policy_output, value = results
+            # print(f"Policy: {policy_output}")
+            # print(f"Value: {value}")
+            policy = policy_output[0]
+            choice = np.argmax(policy)
+            return choice, policy
+            #if choice in available:
+            #    print(f"Policy: {policy}")
+            #    print(f"Choice: {choice}")
+            #    return choice, policy
+            #else:
+            #    print(f"Policy: {policy}")
+            #    print(f"Choice: {choice}")
+            #    return NotImplementedError
         else:
             choice = int(random.choice(available)) - 1
-            return (choice, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7])
+            return choice, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7]
 
     def learn(self, states, policies, winners):
         self.network.train_on_batch(states, policies, winners)
-        if self.trained == False:
+        if self.trained is False:
             self.trained = True
             print("HAS BEEN TRAINED")

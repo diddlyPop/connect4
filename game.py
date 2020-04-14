@@ -34,19 +34,23 @@ class Connect4:
         while self.game_running:
             for player in self.players:
                 # display board
-                self.board.print_board()
+                if self.collection is False:
+                    self.board.print_board()
                 # get column input from player
-                (choice, policy) = player.choose_move(self.board.get_available_moves(), self.board.get_board_state())
+                results = player.choose_move(self.board.get_available_moves(), self.board.get_board_state())
+                choice, policy = results
                 # place piece into board at this column
                 self.board.place(choice, player.number)
                 if self.collection:
+                    # TODO: if player 1 then augment the board to look like its from player 2 pov? might help w/ training
                     player.turns.append([self.board.get_board_state(), list([policy])])
                 # check if win conditions have been met
                 if self.board.check_win(player.number):
                     # if a winner is found set this variable to contain the winners player number
                     self.game_running = False
                     self.winner = player.number
-                    self.board.print_board()
+                    if self.collection is False:
+                        self.board.print_board()
                     break
                 elif not self.board.get_available_moves():
                     self.game_running = False
@@ -56,15 +60,18 @@ class Connect4:
         for player in self.players:
             if self.winner == player.number:
                 player.add_winners(1)
-            elif self.winner == 2:
-                player.add_winners(-1)
-            else:
+            elif self.winner == "DRAW":
                 player.add_winners(0)
+            else:
+                player.add_winners(-1)
 
         data = []
         for i in range(len(self.players[0].turns)):
             data.append(self.players[0].turns[i])
             if i < len(self.players[1].turns):
                 data.append(self.players[1].turns[i])
+
+        for player in self.players:
+            player.turns.clear()
 
         return self.winner, data

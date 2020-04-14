@@ -35,13 +35,12 @@ class NNet:
         self.board_y = 6
         self.dropout = 0.3
         self.channels = 512
-        self.cuda = False
-        self.epochs = 5
-        self.learning_rate = 0.001
+        self.cuda = True
+        self.learning_rate = 0.1
         self.num_of_actions = 7
         self.trained = False
         self.batch_size = 512
-        self.epochs = 3
+        self.epochs = 5
 
         # Neural Net
         self.input_boards = Input(shape=(self.board_x, self.board_y))  # s: batch_size x board_x x board_y
@@ -68,7 +67,9 @@ class NNet:
         self.value = Dense(1, activation='tanh', name='value')(s_fc2)  # batch_size x 1
 
         self.model = Model(inputs=self.input_boards, outputs=[self.policy, self.value])
-        self.model.compile(loss=['categorical_crossentropy', 'mean_squared_error'], optimizer=Adam())
+        self.model.summary()
+        self.model.compile(loss=['categorical_crossentropy', 'mean_squared_error'], optimizer=Adam(learning_rate=self.learning_rate))
+
 
     def train_on_batch(self, states_batch, probabilities_batch, winners_batch):
         states_batch = np.asarray(states_batch)
