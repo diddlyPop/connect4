@@ -27,18 +27,34 @@ class Board:
         self.NUM_COLS = 7
         self.NUM_ROWS = 6
 
-    def get_board_state(self):
+    def get_board_state_player2_perspective(self, player_num):
         """"
         TODO: will encode board state to a format readable by our neural network
         TODO: will append the board states to the board cache
         """
-        current_state = self.matrix
+        current_state = np.array(self.matrix)
+        print(current_state)
+        if player_num == 1:
+            current_state[current_state == 1] = 3
+            current_state[current_state == 2] = 1
+            current_state[current_state == 3] = 2
+            print("AUGMENTING")
+            print(current_state)
 
         # self.cache.append(current_state)
         # encoded_state_block = self.cache
         # TODO: add logic here for creating the current encoded state block
         # encoded_state_block is 6x7x8 (6x7 for board size, 2 layers for each turn, 4 turns total of history)
         return current_state
+
+    def get_board_state_normal(self):
+        """"
+        TODO: will encode board state to a format readable by our neural network
+        TODO: will append the board states to the board cache
+        """
+        states = self.matrix
+
+        return states
 
     def get_available_moves(self):
         """
@@ -51,7 +67,7 @@ class Board:
                 available.append(key+1)
         return available
 
-    def check_win(self, player):
+    def check_win(self, players_number):
         """
         checks for win in all directions (diags, horiz, vert)
         check if array exists within a matrix
@@ -63,36 +79,36 @@ class Board:
         # diag
         for col in range(self.NUM_COLS - 3):
             for row in range(self.NUM_ROWS - 3):
-                if self.matrix[row][col] == player \
-                        and self.matrix[row + 1][col + 1] == player \
-                        and self.matrix[row + 2][col + 2] == player \
-                        and self.matrix[row + 3][col + 3] == player:
+                if self.matrix[row][col] == players_number \
+                        and self.matrix[row + 1][col + 1] == players_number \
+                        and self.matrix[row + 2][col + 2] == players_number \
+                        and self.matrix[row + 3][col + 3] == players_number:
                     return True
 
         # diag
         for col in range(self.NUM_COLS - 3):
             for row in range(3, self.NUM_ROWS):
-                if self.matrix[row][col] == player \
-                        and self.matrix[row - 1][col + 1] == player \
-                        and self.matrix[row - 2][col + 2] == player \
-                        and self.matrix[row - 3][col + 3] == player:
+                if self.matrix[row][col] == players_number \
+                        and self.matrix[row - 1][col + 1] == players_number \
+                        and self.matrix[row - 2][col + 2] == players_number \
+                        and self.matrix[row - 3][col + 3] == players_number:
                     return True
         # vertical
         for col in range(self.NUM_COLS - 3):
             for row in range(self.NUM_ROWS):
-                if self.matrix[row][col] == player \
-                        and self.matrix[row][col + 1] == player \
-                        and self.matrix[row][col + 2] == player \
-                        and self.matrix[row][col + 3] == player:
+                if self.matrix[row][col] == players_number \
+                        and self.matrix[row][col + 1] == players_number \
+                        and self.matrix[row][col + 2] == players_number \
+                        and self.matrix[row][col + 3] == players_number:
                     return True
 
         # horizontal
         for col in range(self.NUM_COLS):
             for row in range(self.NUM_ROWS - 3):
-                if self.matrix[row][col] == player \
-                        and self.matrix[row + 1][col] == player \
-                        and self.matrix[row + 2][col] == player \
-                        and self.matrix[row + 3][col] == player:
+                if self.matrix[row][col] == players_number \
+                        and self.matrix[row + 1][col] == players_number \
+                        and self.matrix[row + 2][col] == players_number \
+                        and self.matrix[row + 3][col] == players_number:
                     return True
 
     def place(self, column, player):

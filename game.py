@@ -34,21 +34,23 @@ class Connect4:
         while self.game_running:
             for player in self.players:
                 # display board
+                self.board.print_board()
                 if self.collection is False:
                     self.board.print_board()
                 # get column input from player
-                results = player.choose_move(self.board.get_available_moves(), self.board.get_board_state())
+                results = player.choose_move(self.board.get_available_moves(), self.board.get_board_state_normal())
                 choice, policy = results
                 # place piece into board at this column
                 self.board.place(choice, player.number)
                 if self.collection:
                     # TODO: if player 1 then augment the board to look like its from player 2 pov? might help w/ training
-                    player.turns.append([self.board.get_board_state(), list([policy])])
+                    player.turns.append([self.board.get_board_state_player2_perspective(player.number), list([policy])])
                 # check if win conditions have been met
                 if self.board.check_win(player.number):
                     # if a winner is found set this variable to contain the winners player number
                     self.game_running = False
-                    self.winner = player.number
+                    number = player.number
+                    self.winner = number
                     if self.collection is False:
                         self.board.print_board()
                     break
