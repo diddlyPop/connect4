@@ -67,12 +67,11 @@ class NNet:
         self.value = Dense(1, activation='tanh', name='value')(s_fc2)  # batch_size x 1
 
         self.model = Model(inputs=self.input_boards, outputs=[self.policy, self.value])
-        self.model.summary()
+        # self.model.summary()
         self.model.compile(loss=['categorical_crossentropy', 'mean_squared_error'], optimizer=Adam(learning_rate=self.learning_rate))
-
 
     def train_on_batch(self, states_batch, probabilities_batch, winners_batch):
         states_batch = np.asarray(states_batch)
         probabilities_batch = np.asarray(probabilities_batch).reshape((512, 7))
         winners_batch = np.asarray(winners_batch)
-        self.model.fit(states_batch, [probabilities_batch, winners_batch], batch_size=self.batch_size, epochs=self.epochs)
+        self.model.fit(states_batch, [probabilities_batch, winners_batch], batch_size=self.batch_size, epochs=self.epochs, verbose=0)

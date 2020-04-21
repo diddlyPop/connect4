@@ -14,6 +14,7 @@
 import random
 from model import NNet
 import numpy as np
+import os
 
 
 class Player:
@@ -88,6 +89,18 @@ class IntelligentAgent(Player):
 
     def learn(self, states, policies, winners):
         self.network.train_on_batch(states, policies, winners)
-        if self.trained is False:
-            self.trained = True
-            print("HAS BEEN TRAINED")
+
+    def save_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
+        filepath = os.path.join(folder, filename)
+        if not os.path.exists(folder):
+            print("Checkpoint Directory does not exist! Making directory {}".format(folder))
+            os.mkdir(folder)
+        else:
+            print("Checkpoint Directory exists! ")
+        self.network.model.save_weights(filepath)
+
+    def load_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
+        filepath = os.path.join(folder, filename)
+        if not os.path.exists(filepath):
+            print("No model found")
+        self.network.model.load_weights(filepath)
