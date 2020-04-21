@@ -27,26 +27,6 @@ class Board:
         self.NUM_COLS = 7
         self.NUM_ROWS = 6
 
-    def get_board_state_player2_perspective(self, player_num):
-        """"
-        TODO: will encode board state to a format readable by our neural network
-        TODO: will append the board states to the board cache
-        """
-        current_state = np.array(self.matrix)
-        print(current_state)
-        if player_num == 1:
-            current_state[current_state == 1] = 3
-            current_state[current_state == 2] = 1
-            current_state[current_state == 3] = 2
-            print("AUGMENTING")
-            print(current_state)
-
-        # self.cache.append(current_state)
-        # encoded_state_block = self.cache
-        # TODO: add logic here for creating the current encoded state block
-        # encoded_state_block is 6x7x8 (6x7 for board size, 2 layers for each turn, 4 turns total of history)
-        return current_state
-
     def get_board_state_normal(self, player_num):
         """"
         TODO: will encode board state to a format readable by our neural network

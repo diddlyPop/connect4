@@ -72,6 +72,6 @@ class NNet:
 
     def train_on_batch(self, states_batch, probabilities_batch, winners_batch):
         states_batch = np.asarray(states_batch)
-        probabilities_batch = np.asarray(probabilities_batch).reshape((512, 7))
+        probabilities_batch = np.asarray(probabilities_batch)
         winners_batch = np.asarray(winners_batch)
         self.model.fit(states_batch, [probabilities_batch, winners_batch], batch_size=self.batch_size, epochs=self.epochs, verbose=0)

@@ -69,18 +69,13 @@ class GameController:
             winner, data = game.start()
             self.buffer.extend(data)
             self_play_winners[winner] += 1
-            if (i + 1) % 50 == 0:
+            if (i + 1) % 100 == 0:
                 self.train_from_data(player1)
+                print("Training done")
         if (self_play_winners[1]/rounds) > 0.5:
             print("Moving to next generation")
             player1.save_checkpoint()
-            player2.load_checkpoint()
-        else:
-            player2.save_checkpoint()
-            player1.load_checkpoint()
-
-
-
+        self.buffer.clear()
         later = time.time()
         total = later - now
         print(f"Player being trained: Player 1")

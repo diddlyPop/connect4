@@ -60,28 +60,21 @@ class RandomAgent(Player):
 
 
 class IntelligentAgent(Player):
-    def __init__(self, number):
+    def __init__(self, number, trained=False):
         self.network = NNet()
-        self.trained = False
+        self.trained = trained
         super().__init__(number)
 
     def choose_move(self, available, board_state):
+        # uses network prediction if training flag is true
         if self.trained:
             results = self.network.model.predict([(np.array(board_state)).reshape((1, 6, 7))])
             policy_output, value = results
-            # print(f"Policy: {policy_output}")
-            # print(f"Value: {value}")
             policy = policy_output[0]
             for item in np.argsort(policy)[::-1]:
                 if item+1 in available:
                     choice = item
                     break
-            if (choice + 1) not in available:
-                print(f"Snapshot: {choice}, {available}")
-                # raise ValueError
-                choice = int(random.choice(available)) - 1
-                print("net chose a move that is unavailable")
-                # TODO: figure out how to prevent network from choosing unavailable move
             return choice, policy
         else:
             choice = int(random.choice(available)) - 1
@@ -89,6 +82,7 @@ class IntelligentAgent(Player):
 
     def learn(self, states, policies, winners):
         self.network.train_on_batch(states, policies, winners)
+        self.trained = True
 
     def save_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
         filepath = os.path.join(folder, filename)
@@ -104,3 +98,4 @@ class IntelligentAgent(Player):
         if not os.path.exists(filepath):
             print("No model found")
         self.network.model.load_weights(filepath)
+        self.trained = True

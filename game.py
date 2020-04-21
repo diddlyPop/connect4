@@ -13,7 +13,7 @@ from board import Board
 
 
 class Connect4:
-    def __init__(self, player1, player2, data_collection=False, print_boards=False):
+    def __init__(self, player1, player2, data_collection=False, print_boards=False, verbose=False):
         """
         sets up player list, initializes game data, creates new board, and starts game
         """
@@ -23,6 +23,7 @@ class Connect4:
         self.board = Board()
         self.data_collection = data_collection
         self.print_boards = print_boards
+        self.verbose = verbose
 
     def start(self):
         """
@@ -43,7 +44,7 @@ class Connect4:
                 self.board.place(choice, player.number)
                 if self.data_collection:
                     # add turn to players turn history, augment perspective to show current player's pieces as 1
-                    player.turns.append([self.board.get_board_state_normal(player.number), list([policy])])
+                    player.turns.append([self.board.get_board_state_normal(player.number), policy])
                 # check if win conditions have been met
                 if self.board.check_win(player.number):
                     # if a winner is found set this variable to contain the winners player number
@@ -74,14 +75,15 @@ class Connect4:
         # game end print board
         self.board.print_board()
 
+        print(f"Game winning policy: {list([policy])}")
         # match history
         data = []
 
         # load each turn into list
         for i in range(len(self.players[0].turns)):
             data.append(self.players[0].turns[i])
-            if i < len(self.players[1].turns):
-                data.append(self.players[1].turns[i])
+            #if i < len(self.players[1].turns):
+                #data.append(self.players[1].turns[i])
 
         # clear turn history
         for player in self.players:
