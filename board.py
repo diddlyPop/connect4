@@ -47,14 +47,17 @@ class Board:
         # encoded_state_block is 6x7x8 (6x7 for board size, 2 layers for each turn, 4 turns total of history)
         return current_state
 
-    def get_board_state_normal(self):
+    def get_board_state_normal(self, player_num):
         """"
         TODO: will encode board state to a format readable by our neural network
         TODO: will append the board states to the board cache
         """
-        states = self.matrix
-
-        return states
+        current_state = np.array(self.matrix)
+        if player_num == -1:
+            current_state[current_state == 1] = 2
+            current_state[current_state == -1] = 1
+            current_state[current_state == 2] = -1
+        return current_state
 
     def get_available_moves(self):
         """

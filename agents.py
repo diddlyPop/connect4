@@ -55,35 +55,36 @@ class Human(Player):
 
 class RandomAgent(Player):
     def choose_move(self, available, board_state):
-        return int(random.choice(available))-1, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7]
+        return int(random.choice(available))-1, [(1 / len(available)) if i in available else 0 for i in range(1, 8)]
 
 
 class IntelligentAgent(Player):
     def __init__(self, number):
         self.network = NNet()
-        self.trained = True
+        self.trained = False
         super().__init__(number)
 
     def choose_move(self, available, board_state):
         if self.trained:
-            results = self.network.model.predict([(np.asarray(board_state)).reshape((1, 7, 6))])
+            results = self.network.model.predict([(np.array(board_state)).reshape((1, 6, 7))])
             policy_output, value = results
             # print(f"Policy: {policy_output}")
             # print(f"Value: {value}")
             policy = policy_output[0]
-            choice = np.argmax(policy)
+            for item in np.argsort(policy)[::-1]:
+                if item+1 in available:
+                    choice = item
+                    break
+            if (choice + 1) not in available:
+                print(f"Snapshot: {choice}, {available}")
+                # raise ValueError
+                choice = int(random.choice(available)) - 1
+                print("net chose a move that is unavailable")
+                # TODO: figure out how to prevent network from choosing unavailable move
             return choice, policy
-            #if choice in available:
-            #    print(f"Policy: {policy}")
-            #    print(f"Choice: {choice}")
-            #    return choice, policy
-            #else:
-            #    print(f"Policy: {policy}")
-            #    print(f"Choice: {choice}")
-            #    return NotImplementedError
         else:
             choice = int(random.choice(available)) - 1
-            return choice, [1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7, 1 / 7]
+            return choice, [(1 / len(available)) if i in available else 0 for i in range(1, 8)]
 
     def learn(self, states, policies, winners):
         self.network.train_on_batch(states, policies, winners)
