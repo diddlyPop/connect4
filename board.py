@@ -10,6 +10,8 @@
 #
 #################################################################################
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import colors
 
 
 class Board:
@@ -29,14 +31,23 @@ class Board:
 
     def get_board_state_normal(self, player_num):
         """"
-        TODO: will encode board state to a format readable by our neural network
-        TODO: will append the board states to the board cache
+        will encode board state to a format readable by our neural network
+        augmenting is possibly unnecessary
         """
         current_state = np.array(self.matrix)
         if player_num == -1:
             current_state[current_state == 1] = 2
             current_state[current_state == -1] = 1
             current_state[current_state == 2] = -1
+        return current_state
+
+    def get_board_state_for_plot(self):
+        """"
+        will encode board state to a format readable by matplotlib
+        """
+        current_state = np.array(self.matrix)
+        current_state[current_state == -1] = 15
+        current_state[current_state == 1] = 6
         return current_state
 
     def get_available_moves(self):
@@ -47,7 +58,7 @@ class Board:
         available = []
         for key in self.cols:
             if self.cols[key] >= 0:
-                available.append(key+1)
+                available.append(key + 1)
         return available
 
     def check_win(self, players_number):
@@ -123,6 +134,21 @@ class Board:
         print("_________________________")
         print("1   2   3   4   5   6   7")
         print("-------------------------")
-        output = '\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.matrix])
+        output = '\n'.join([' '.join([str(cell) for cell in row]) for row in self.matrix])
         print(output)
         print("_________________________")
+
+    def plot_board(self):
+        data = self.get_board_state_for_plot()
+
+        # create discrete colormap
+        cmap = colors.ListedColormap(['white', 'blue', 'red'])
+        bounds = [0, 5, 10, 15]
+        norm = colors.BoundaryNorm(bounds, cmap.N)
+
+        fig, ax = plt.subplots()
+        ax.imshow(data, cmap=cmap, norm=norm)
+
+        # draw gridlines
+
+        plt.show()

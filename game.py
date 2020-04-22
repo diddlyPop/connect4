@@ -13,7 +13,7 @@ from board import Board
 
 
 class Connect4:
-    def __init__(self, player1, player2, data_collection=False, print_boards=False, verbose=False):
+    def __init__(self, player1, player2, data_collection=False, print_boards=False, verbose=True):
         """
         sets up player list, initializes game data, creates new board, and starts game
         """
@@ -73,9 +73,9 @@ class Connect4:
                 player.add_winners(-1)
 
         # game end print board
-        self.board.print_board()
-
-        print(f"Game winning policy: {list([policy])}")
+        if self.verbose:
+            self.board.plot_board()
+            print(f"Game winning policy: {list([policy])}")
         # match history
         data = []
 

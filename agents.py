@@ -67,7 +67,7 @@ class IntelligentAgent(Player):
 
     def choose_move(self, available, board_state):
         # uses network prediction if training flag is true
-        if self.trained:
+        if self.network.trained:
             results = self.network.model.predict([(np.array(board_state)).reshape((1, 6, 7))])
             policy_output, value = results
             policy = policy_output[0]
@@ -82,7 +82,7 @@ class IntelligentAgent(Player):
 
     def learn(self, states, policies, winners):
         self.network.train_on_batch(states, policies, winners)
-        self.trained = True
+        self.network.trained = True
 
     def save_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
         filepath = os.path.join(folder, filename)
@@ -98,4 +98,4 @@ class IntelligentAgent(Player):
         if not os.path.exists(filepath):
             print("No model found")
         self.network.model.load_weights(filepath)
-        self.trained = True
+        self.network.trained = True
