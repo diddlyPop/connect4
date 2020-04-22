@@ -27,38 +27,61 @@ class GameController:
         # self.network = NNet()
 
     def start_pvp_game(self, player1, player2):
-        player1 = Human(1)
-        player2 = Human(-1)
-        game = Connect4(player1, player2, collection=False)
+        game = Connect4(player1, player2, data_collection=False, print_boards=True)
         winner, data = game.start()
         print(f"The winner was Player {winner}!")
         print(f"Data collected during match: {data}")
 
     def start_pve_game(self, player1, player2):
-        player1 = Human(1)
-        player2 = RandomAgent(-1)
-        game = Connect4(player1, player2, collection=False)
+        game = Connect4(player1, player2, data_collection=False, print_boards=True)
         winner, data = game.start()
         print(f"The winner was Player {winner}!")
         # print(f"Data collected during match: {data}")
 
     def start_self_play(self, player1, player2, rounds=1000):
+        # no checkpoint usage or advancing generations
         self_play_winners = {1: 0, -1: 0, "DRAW": 0}
 
         now = time.time()
         for i in range(rounds):
-            game = Connect4(player1, player2, collection=True)
+            game = Connect4(player1, player2, data_collection=True, print_boards=False, verbose=False)
             winner, data = game.start()
             self.buffer.extend(data)
             self_play_winners[winner] += 1
             if (i + 1) % 100 == 0:
-                self.train_from_data(player2)
+                self.train_from_data(player1)
+                self.buffer.clear()
 
         later = time.time()
         total = later - now
-        print(f"Training triggered: {player2.trained}")
-        print(f"Games won by A Computer: {self_play_winners[1]}!")
-        print(f"Games won by Stewart Little: {self_play_winners[-1]}!")
+        print(f"Player being trained: Player 1")
+        print(f"Games won by Player 1: {self_play_winners[1]}!")
+        print(f"Games won by Player -1: {self_play_winners[-1]}!")
+        print(f"Draws: {self_play_winners['DRAW']}!")
+        print(f"Time during {rounds} matches: {total:.2f}s")
+        # print(f"Data collected during match: {data}")
+
+    def start_arena_play(self, player1, player2, rounds=1000):
+        # automatic movement to next generation
+        self_play_winners = {1: 0, -1: 0, "DRAW": 0}
+        now = time.time()
+        for i in range(rounds):
+            game = Connect4(player1, player2, data_collection=True, print_boards=False, verbose=False)
+            winner, data = game.start()
+            self.buffer.extend(data)
+            self_play_winners[winner] += 1
+            if (i + 1) % 100 == 0:
+                self.train_from_data(player1)
+                print("Training done")
+        if (self_play_winners[1]/rounds) > 0.5:
+            print("Moving to next generation")
+            player1.save_checkpoint()
+
+        later = time.time()
+        total = later - now
+        print(f"Player being trained: Player 1")
+        print(f"Games won by Player 1: {self_play_winners[1]}!")
+        print(f"Games won by Player -1: {self_play_winners[-1]}!")
         print(f"Draws: {self_play_winners['DRAW']}!")
         print(f"Time during {rounds} matches: {total:.2f}s")
         # print(f"Data collected during match: {data}")
@@ -74,7 +97,7 @@ class GameController:
 
 if __name__ == '__main__':
     coach = GameController()
-    player1 = RandomAgent(1)
-    player2 = IntelligentAgent(-1)
+    player1 = RandomAgent(-1)
+    player2 = IntelligentAgent(1)
     coach.start_self_play(player1, player2)
 
