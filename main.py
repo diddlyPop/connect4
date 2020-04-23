@@ -36,7 +36,12 @@ class GameController:
         game = Connect4(player1, player2, data_collection=False, print_boards=True)
         winner, data = game.start()
         print(f"The winner was Player {winner}!")
-        # print(f"Data collected during match: {data}")
+
+    def start_api_game(self, player1, player2):
+        # start flask web app
+        game = Connect4(player1, player2, data_collection=False, print_boards=True)
+        winner, data = game.start()
+        print(f"The winner was Player {winner}!")
 
     def start_self_play(self, player1, player2, rounds=1000):
         # no checkpoint usage or advancing generations
@@ -49,8 +54,10 @@ class GameController:
             self.buffer.extend(data)
             self_play_winners[winner] += 1
             if (i + 1) % 100 == 0:
-                self.train_from_data(player1)
-                self.buffer.clear()
+                try:
+                    self.train_from_data(player1)
+                except ValueError as e:
+                    print(e)
 
         later = time.time()
         total = later - now
