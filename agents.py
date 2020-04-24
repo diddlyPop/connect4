@@ -108,13 +108,13 @@ class IntelligentWebAgent(Player):
         self.trained = trained
         super().__init__(number)
         self.load_checkpoint()
+        self.graph = None
 
     def choose_move(self, available, board_state):
         # uses network prediction if training flag is true
         if self.network.trained:
-            with graph.as_default():
-                with sess.as_default():
-                    results = self.network.model.predict([(np.array(board_state)).reshape((1, 6, 7))])
+            #with self.graph.as_default():
+            results = self.network.model.predict([(np.array(board_state)).reshape((1, 6, 7))])
             policy_output, value = results
             policy = policy_output[0]
             for item in np.argsort(policy)[::-1]:
@@ -150,15 +150,31 @@ class IntelligentWebAgent(Player):
 
 class WebAgent(Player):
     def __init__(self, number, ip='127.0.0.1'):
-        self.network = NNet()
         self.ip = ip
         self.port = 4230
         self.choice = None
         super().__init__(number)
 
     def choose_move(self, available, board_state):
+        global gui_choice
         while self.choice is None:
-            pass
+            if gui_choice is not None:
+                self.choice = gui_choice
+        choice_to_return = self.choice
+        self.choice = None
+        return choice_to_return, [(1 / len(available)) if i in available else 0 for i in range(1, 8)]
+
+
+class GUIAgent(Player):
+    def __init__(self, number):
+        self.choice = None
+        super().__init__(number)
+
+    def choose_move(self, available, board_state):
+        global gui_choice
+        while self.choice is None:
+            if gui_choice is not None:
+                self.choice = gui_choice
         choice_to_return = self.choice
         self.choice = None
         return choice_to_return, [(1 / len(available)) if i in available else 0 for i in range(1, 8)]
