@@ -1,6 +1,6 @@
 #################################################################################
 #
-# main.py
+# controller.py
 #
 # NetController class currently contains functionality for a few types of games
 #
@@ -37,12 +37,6 @@ class GameController:
         winner, data = game.start()
         print(f"The winner was Player {winner}!")
 
-    def start_api_game(self, player1, player2):
-        # start flask web app
-        game = Connect4(player1, player2, data_collection=False, print_boards=True)
-        winner, data = game.start()
-        print(f"The winner was Player {winner}!")
-
     def start_self_play(self, player1, player2, rounds=1000):
         # no checkpoint usage or advancing generations
         self_play_winners = {1: 0, -1: 0, "DRAW": 0}
@@ -58,31 +52,6 @@ class GameController:
                     self.train_from_data(player1)
                 except ValueError as e:
                     print(e)
-
-        later = time.time()
-        total = later - now
-        print(f"Player being trained: Player 1")
-        print(f"Games won by Player 1: {self_play_winners[1]}!")
-        print(f"Games won by Player -1: {self_play_winners[-1]}!")
-        print(f"Draws: {self_play_winners['DRAW']}!")
-        print(f"Time during {rounds} matches: {total:.2f}s")
-        # print(f"Data collected during match: {data}")
-
-    def start_arena_play(self, player1, player2, rounds=1000):
-        # automatic movement to next generation
-        self_play_winners = {1: 0, -1: 0, "DRAW": 0}
-        now = time.time()
-        for i in range(rounds):
-            game = Connect4(player1, player2, data_collection=True, print_boards=False, plot=False)
-            winner, data = game.start()
-            self.buffer.extend(data)
-            self_play_winners[winner] += 1
-            if (i + 1) % 100 == 0:
-                self.train_from_data(player1)
-                print("Training done")
-        if (self_play_winners[1]/rounds) > 0.5:
-            print("Moving to next generation")
-            player1.save_checkpoint()
 
         later = time.time()
         total = later - now

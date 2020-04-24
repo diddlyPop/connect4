@@ -11,9 +11,7 @@
 #################################################################################
 from board import Board
 import pygame
-from pygame import image
-from agents import GUIAgent, IntelligentWebAgent
-import threading
+from agents import GUIAgent, IntelligentAgent
 
 
 class UI:
@@ -109,9 +107,7 @@ if __name__ == "__main__":
     '''logo = pygame.image.load("images/logo.png")
     pygame.display.set_icon(logo)'''
     pygame.display.set_caption("Connect Four!")
-    frank = IntelligentWebAgent(1, trained=True)
-    frank.load_checkpoint()
-    # frank.graph = tf.get_default_graph()
+    frank = IntelligentAgent(1)
     human = GUIAgent(-1)
     project = UI(frank, human)
     project.mainLoop()

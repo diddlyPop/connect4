@@ -16,10 +16,6 @@
 #
 #################################################################################
 
-import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.utils import to_categorical
 from keras.models import *
 from keras.layers import *
 from keras.optimizers import *
@@ -28,8 +24,8 @@ from keras.optimizers import *
 class NNet:
     def __init__(self):
         """
-        input: 6x7 for board size, 2 layers per turn, 4 turns of history
-        output: policy head and value head
+        input: 6x7 for board size
+        output: policy head
         """
         self.board_x = 6
         self.board_y = 7
