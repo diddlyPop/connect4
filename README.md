@@ -13,3 +13,9 @@ Project goals:
   - Pygame or web app
 
 <hr>
+
+Requirements:
+- install anaconda
+- pip install tensorflow and keras through the anaconda shell
+- clone the project
+- run 'python game_ui.py' from the anaconda shell in the cloned folder
