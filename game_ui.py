@@ -12,8 +12,9 @@
 from board import Board
 import pygame
 from agents import GUIAgent, IntelligentAgent
+import sys
 
-
+RED = (255, 0, 0)
 class UI:
     def __init__(self, player1, player2):
         self.width = 600
@@ -65,6 +66,8 @@ class UI:
                 #self.drawBoard = False
             ev = pygame.event.get()
             for event in ev:
+                if event.type == pygame.QUIT:
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
                     if (pos[1] >= (self.boardYOffset) and pos[1] <= (self.boardYOffset + (8 * self.squareHeight)) #ensures action only occurs if they click inside the game board
@@ -91,7 +94,10 @@ class UI:
                                     self.runGame = False
                                     number = player.number
                                     self.winner = number
+                                    label = myfont.render(f"Player {self.winner} won the game", player.number, RED)
+                                    self.screen.blit(label, (40,10))
                                     print(f"Player {self.winner} won the game")
+                                    pygame.time.wait(3000)
 
                                     break
                                 # no win condition but check if there's still available moves
@@ -100,6 +106,8 @@ class UI:
                                     self.runGame = False
                                     self.winner = "DRAW"
                                     print(self.winner)
+                                    pygame.time.wait(3000)
+
                                     break
                             self.grid = self.board.get_board_state_normal(1)
                             print(self.grid)
@@ -114,5 +122,6 @@ if __name__ == "__main__":
     frank.load_checkpoint()
     human = GUIAgent(-1)
     project = UI(frank, human)
+    myfont = pygame.font.SysFont("monospace", 75)
     project.mainLoop()
 
