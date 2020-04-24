@@ -11,9 +11,7 @@
 #################################################################################
 from board import Board
 import pygame
-from pygame import image
-from agents import GUIAgent, IntelligentWebAgent
-import threading
+from agents import GUIAgent, IntelligentAgent
 
 
 class UI:
@@ -93,12 +91,15 @@ class UI:
                                     self.runGame = False
                                     number = player.number
                                     self.winner = number
+                                    print(f"Player {self.winner} won the game")
+
                                     break
                                 # no win condition but check if there's still available moves
                                 elif not self.board.get_available_moves():
                                     # game result was a draw
                                     self.runGame = False
                                     self.winner = "DRAW"
+                                    print(self.winner)
                                     break
                             self.grid = self.board.get_board_state_normal(1)
                             print(self.grid)
@@ -109,9 +110,8 @@ if __name__ == "__main__":
     '''logo = pygame.image.load("images/logo.png")
     pygame.display.set_icon(logo)'''
     pygame.display.set_caption("Connect Four!")
-    frank = IntelligentWebAgent(1, trained=True)
+    frank = IntelligentAgent(1, trained=True)
     frank.load_checkpoint()
-    # frank.graph = tf.get_default_graph()
     human = GUIAgent(-1)
     project = UI(frank, human)
     project.mainLoop()

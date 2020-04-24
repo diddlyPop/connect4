@@ -28,7 +28,7 @@ class Connect4:
     def start(self):
         """
         main game loop
-        TODO: log state data
+        trains player in player1 slot
         :return: none, but displays winner at end of game
         """
         win_flag = 1
