@@ -90,6 +90,7 @@ class UI:
                                 choice, policy = results
                                 # place piece into board at this column
                                 self.board.place(choice, player.number)
+                                player.turns.append([self.board.get_board_state_normal(player.number), policy])
                                 if self.board.check_win(player.number):
                                     # if a winner is found set this variable to contain the winners player number
                                     self.runGame = False
@@ -125,6 +126,27 @@ class UI:
                                         pygame.display.update()
                             pygame.time.wait(2)
                     if not self.runGame:
+                        for player in self.players:
+                            if self.winner == player.number:
+                                player.add_winners(1)
+                            elif self.winner == "DRAW":
+                                player.add_winners(0)
+                            else:
+                                player.add_winners(-1)
+                        turn_info = []
+
+                        # load each turn into list
+                        for i in range(len(self.players[1].turns)):
+                            turn_info.append(self.players[1].turns[i])
+                            if i < len(self.players[0].turns):
+                                turn_info.append(self.players[0].turns[i])
+
+                        states_batch = [data[0] for data in turn_info]
+                        policies_batch = [data[1] for data in turn_info]
+                        winners_batch = [data[2] for data in turn_info]
+                        for _ in range(5):
+                            self.players[1].learn(states_batch, policies_batch, winners_batch)
+                        self.players[1].save_checkpoint()
                         pygame.time.wait(4000)
 
 
