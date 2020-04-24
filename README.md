@@ -6,7 +6,7 @@ Project goals:
   - Uses numpy for efficient board computation
   - Provide framework for agents to be placed in as players and access game data
 - Build AlphaZero-style agent for connect4
-  - Neural network / Monte carlo search tree
+  - Neural network / Monte Carlo search tree
   - Train and apply agent to console style game
 - Deploy api for interfacing with our trained Connect4 agent
 - Deploy GUI version of game
@@ -31,9 +31,9 @@ Our Architecture
 ============
 Our neural network model takes as input the current board state in a binary format. The AlphaGo Zero model sends as input both players board states in a binary format and a few previous board states for each player. We will first construct our model using only the two players board states in a binary format, and hope to later iterate on the network architecture.
 
-The network will have two ouput nodes at the head of the network. The policy output is a list of probabilities mapped to each possible move. The value output displays the amount of turns until a player is expected to lose or to win.
+The network will have two output nodes at the head of the network. The policy output is a list of probabilities mapped to each possible move. The value output displays the amount of turns until a player is expected to lose or to win.
 
-The policy output is a great indicator of what moves are the best at the current board state. It makes sense to assume that this would be more than enough to base the agent's decisions off of. The value head is tremenedously helpful in determining what is expected to happen in x turns from now. The Monte-Carlo Search Tree utilizes the value head to restrict the overrall search space while still making informed decisions about what will happen in the future. The combination of both outputs is key to the agent's artificial intuition of the current state of play.
+The policy output is a great indicator of what moves are the best at the current board state. It makes sense to assume that this would be more than enough to base the agent's decisions off of. The value head is tremendously helpful in determining what is expected to happen in x turns from now. The Monte-Carlo Search Tree utilizes the value head to restrict the overall search space while still making informed decisions about what will happen in the future. The combination of both outputs is key to the agent's artificial intuition of the current state of play.
 
 Todo
 ============
