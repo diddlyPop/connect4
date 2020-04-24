@@ -14,6 +14,12 @@ Project goals:
 
 <hr>
 
+Requirements:
+- install anaconda
+- pip install tensorflow and keras through the anaconda shell
+- clone the project
+- run 'python game_ui.py' from the anaconda shell in the cloned folder
+
 AlphaZero
 ============
 The AlphaZero algorithm runs three processes in parallel:
