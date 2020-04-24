@@ -93,13 +93,13 @@ class IntelligentAgent(Player):
             print("Creating models folder.")
             os.mkdir(folder)
         else:
-            print("Found valid model")
+            print("Saving model.")
         self.network.model.save_weights(filepath)
 
     def load_checkpoint(self, folder='models', filename='basic.pth.tar'):
         filepath = os.path.join(folder, filename)
         if not os.path.exists(filepath):
-            print("No model found")
+            print("No model found.")
         self.network.model.load_weights(filepath)
         self.network.trained = True
 

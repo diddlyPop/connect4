@@ -37,13 +37,13 @@ class GameController:
         winner, data = game.start()
         print(f"The winner was Player {winner}!")
 
-    def start_self_play(self, player1, player2, rounds=1000):
+    def start_self_play(self, player1, player2, rounds=1000, to_plot=True):
         # no checkpoint usage or advancing generations
         self_play_winners = {1: 0, -1: 0, "DRAW": 0}
 
         now = time.time()
         for i in range(rounds):
-            game = Connect4(player1, player2, data_collection=True, print_boards=False, plot=True)
+            game = Connect4(player1, player2, data_collection=True, print_boards=False, plot=to_plot)
             winner, data = game.start()
             self.buffer.extend(data)
             self_play_winners[winner] += 1
