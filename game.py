@@ -13,7 +13,7 @@ from board import Board
 
 
 class Connect4:
-    def __init__(self, player1, player2, data_collection=False, print_boards=False, plot=False):
+    def __init__(self, player1, player2, data_collection=False, print_boards=False, plot=True):
         """
         sets up player list, initializes game data, creates new board, and starts game
         """

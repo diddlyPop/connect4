@@ -1,6 +1,7 @@
 from flask import Flask
 from agents import IntelligentWebAgent, WebAgent
 from game import Connect4
+import tensorflow as tf
 
 import threading
 
@@ -35,6 +36,7 @@ def get_board():
 
 if __name__ == '__main__':
     frank = IntelligentWebAgent(1, trained=True)
+    # frank.graph = tf.get_default_graph()
     human = WebAgent(-1)
     game = Connect4(frank, human, print_boards=True)
     t = threading.Thread(target=game.start)

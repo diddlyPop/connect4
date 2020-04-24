@@ -49,7 +49,7 @@ class GameController:
 
         now = time.time()
         for i in range(rounds):
-            game = Connect4(player1, player2, data_collection=True, print_boards=False, verbose=False)
+            game = Connect4(player1, player2, data_collection=True, print_boards=False, plot=True)
             winner, data = game.start()
             self.buffer.extend(data)
             self_play_winners[winner] += 1
@@ -73,7 +73,7 @@ class GameController:
         self_play_winners = {1: 0, -1: 0, "DRAW": 0}
         now = time.time()
         for i in range(rounds):
-            game = Connect4(player1, player2, data_collection=True, print_boards=False, verbose=False)
+            game = Connect4(player1, player2, data_collection=True, print_boards=False, plot=False)
             winner, data = game.start()
             self.buffer.extend(data)
             self_play_winners[winner] += 1
