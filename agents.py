@@ -171,10 +171,8 @@ class GUIAgent(Player):
         super().__init__(number)
 
     def choose_move(self, available, board_state):
-        global gui_choice
         while self.choice is None:
-            if gui_choice is not None:
-                self.choice = gui_choice
+            pass
         choice_to_return = self.choice
         self.choice = None
         return choice_to_return, [(1 / len(available)) if i in available else 0 for i in range(1, 8)]
