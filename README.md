@@ -27,6 +27,8 @@ The AlphaZero algorithm runs three processes in parallel:
 - Constant training on the turns from the Monte-Carlo search tree self-play
 - Evaluation of the neural networks performance at pre-defined checkpoints, uses best model
 
+Functionality
+============
 Our neural network model takes as input the current board state in a binary format. The AlphaGo Zero model sends as input both players board states in a binary format and a few previous board states for each player. We will first construct our model using only the two players board states in a binary format, and hope to later iterate on the network architecture.
 
 The network will have two output nodes at the head of the network. The policy output is a list of probabilities mapped to each possible move. The value output displays the amount of turns until a player is expected to lose or to win.
