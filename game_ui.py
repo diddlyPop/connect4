@@ -67,8 +67,8 @@ class UI:
             for event in ev:
                 if event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
-                    if (pos[1] >= (self.boardYOffset) and pos[1] <= (self.boardYOffset + (8 * self.squareHeight)) #ensures action only occurs if they click inside the game board
-                        and pos[0] >= self.boardXOffset and pos[0] <= (self.boardXOffset + (7 * self.squareWidth))):
+                    if (pos[1] >= (self.boardYOffset) and pos[1] <= (self.boardYOffset + (8 * self.squareHeight))
+                    and pos[0] >= self.boardXOffset and pos[0] <= (self.boardXOffset + (7 * self.squareWidth))):
                         col = (pos[0] - self.boardXOffset) // self.squareWidth
                         validMove = False
                         correctRow = 5
@@ -84,6 +84,7 @@ class UI:
                                 results = player.choose_move(self.board.get_available_moves(),
                                                               self.board.get_board_state_normal(player.number))
                                 choice, policy = results
+                                print(policy)
                                 # place piece into board at this column
                                 self.board.place(choice, player.number)
                                 if self.board.check_win(player.number):
@@ -103,6 +104,16 @@ class UI:
                                     break
                             self.grid = self.board.get_board_state_normal(1)
                             print(self.grid)
+                            if self.drawBoard:
+                                for row in range(6):
+                                    for col in range(7):
+                                        rect = self.IMAGES[str(self.grid[row][col])].get_rect(topleft=(
+                                        (self.boardXOffset + (col * self.squareWidth)),
+                                        (self.boardYOffset + (row * self.squareHeight))))
+                                        self.screen.blit(self.IMAGES[str(self.grid[row][col])], rect)
+                                        pygame.display.update()
+                                # self.drawBoard = False
+                            pygame.time.wait(50)
 
 
 if __name__ == "__main__":
@@ -111,7 +122,7 @@ if __name__ == "__main__":
     pygame.display.set_icon(logo)'''
     pygame.display.set_caption("Connect Four!")
     frank = IntelligentAgent(1, trained=True)
-    frank.load_checkpoint()
+    frank.load_checkpoint(filename='basic.pth.tar')
     human = GUIAgent(-1)
     project = UI(frank, human)
     project.mainLoop()

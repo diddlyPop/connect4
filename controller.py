@@ -47,9 +47,10 @@ class GameController:
             winner, data = game.start()
             self.buffer.extend(data)
             self_play_winners[winner] += 1
-            if (i + 1) % 100 == 0:
+            if (i + 1) % 1 == 0:
                 try:
                     self.train_from_data(player1)
+                    self.train_from_data(player2)
                 except ValueError as e:
                     print(e)
 

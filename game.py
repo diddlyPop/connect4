@@ -75,15 +75,15 @@ class Connect4:
         # game end print board
         if self.plot:
             self.board.plot_board()
-            print(f"Game winning policy: {list([policy])}")
+            print(f"Game winning policy: {[policy]}")
         # match history
         data = []
 
         # load each turn into list
         for i in range(len(self.players[0].turns)):
             data.append(self.players[0].turns[i])
-            #if i < len(self.players[1].turns):
-                #data.append(self.players[1].turns[i])
+            if i < len(self.players[1].turns):
+                data.append(self.players[1].turns[i])
 
         # clear turn history
         for player in self.players:
