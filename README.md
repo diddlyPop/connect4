@@ -14,10 +14,10 @@ Project goals:
 
 <hr>
 
-Requirements:
+Installation and Requirements:
 - install anaconda
-- pip install tensorflow and keras through the anaconda shell
 - clone the project
+- pip install -r requirements.txt from anaconda shell
 - run 'python game_ui.py' from the anaconda shell in the cloned folder
 
 AlphaZero
@@ -27,19 +27,15 @@ The AlphaZero algorithm runs three processes in parallel:
 - Constant training on the turns from the Monte-Carlo search tree self-play
 - Evaluation of the neural networks performance at pre-defined checkpoints, uses best model
 
-Our Architecture
-============
 Our neural network model takes as input the current board state in a binary format. The AlphaGo Zero model sends as input both players board states in a binary format and a few previous board states for each player. We will first construct our model using only the two players board states in a binary format, and hope to later iterate on the network architecture.
 
 The network will have two output nodes at the head of the network. The policy output is a list of probabilities mapped to each possible move. The value output displays the amount of turns until a player is expected to lose or to win.
 
 The policy output is a great indicator of what moves are the best at the current board state. It makes sense to assume that this would be more than enough to base the agent's decisions off of. The value head is tremendously helpful in determining what is expected to happen in x turns from now. The Monte-Carlo Search Tree utilizes the value head to restrict the overall search space while still making informed decisions about what will happen in the future. The combination of both outputs is key to the agent's artificial intuition of the current state of play.
 
-Todo
+Future Work
 ============
 Neural network currently takes current board state as a 6x7 numpy matrix as input, and outputs a policy distribution to predict the best move. Without the MCTS the state-space is too high to get a good training in a short period of time. After about 10,000 rounds the agent would win quickly against a RandomAgent. When playing against a Human, it is easily outwitted.
 
 - The input layer should be expanded to an input block. Extra layers should be added that consist of previous turn states.
 - The value head needs to be implemented using the MCTS traversal.
-- An API needs to be developed, likely in flask, to interface with the game as a WebAgent.
-- Front end can be a simple grid with colored buttons representing the current board state.
